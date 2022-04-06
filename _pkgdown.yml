@@ -3,19 +3,18 @@ template:
   bootstrap: 5
 reference:
 - title: Leaflet.Circle-sector wrappers
-  desc: >
+  desc: |
     Wrapper functions for the Leaflet plugin "Leaflet.Circle-sector".
-  contents:
-  - has_concept("plugin")
+  contents: has_concept("plugin")
 - title: Example data
-  desc: >
+  desc: |
     Packaged example data.
-  contents:
-  - has_concept("included")
+  contents: has_concept("included")
 authors:
   DBCA:
-    html: "<img src='man/figures/dbca_bcs.png' width='150' alt='DBCA'/>"
+    html: <img src='man/figures/dbca_bcs.png' width='150' alt='DBCA'/>
     href: https://www.dbca.wa.gov.au/science/
   NWSFTCP:
-    html: "<img src='man/figures/flatbacks.svg' width='150' alt='NWSFTCP'/>"
+    html: <img src='man/figures/flatbacks.svg' width='150' alt='NWSFTCP'/>
     href: https://flatbacks.dbca.wa.gov.au/
+
