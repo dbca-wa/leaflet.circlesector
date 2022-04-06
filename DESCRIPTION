@@ -1,0 +1,39 @@
+Package: leaflet.circlesector
+Title: An R wrapper for the Leaflet.Circle-sector plugin
+Version: 0.1.0
+Authors@R: 
+    c(person(given = c("Florian", "W."),
+             family = "Mayer",
+             role = c("aut", "cre"),
+             email = "Florian.Mayer@dbca.wa.gov.au",
+             comment = c(ORCID = "0000-0003-4269-4242")),
+      person(given = "DBCA",
+             role = c("cph", "fnd")),
+      person(given = "NWSFTCP",
+             role = "fnd"))
+Description: This package wraps the Leaflet plugin 'Leaflet.Circle-sector' 
+  and provides example data from marine turtle monitoring.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+VignetteBuilder: knitr
+Depends: 
+    R (>= 2.10)
+LazyData: true
+Imports: 
+    dplyr,
+    glue,
+    htmltools,
+    htmlwidgets,
+    leaflet,
+    leaflet.extras,
+    magrittr,
+    reactable,
+    stringr
+Config/testthat/edition: 3
+URL: https://dbca-wa.github.io/leaflet.circlesector/

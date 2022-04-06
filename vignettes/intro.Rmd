@@ -1,0 +1,125 @@
+---
+title: "Introduction"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(leaflet.circlesector)
+
+# Example data
+data("fans_tracks")
+data("fans_mean")
+data("fans_water")
+data("outlier_segments")
+data("light_segments_artificial")
+data("light_segments_natural")
+
+# Display helper
+hr <- . %>%
+  head() %>%
+  reactable::reactable(
+      sortable = TRUE, 
+      filterable = TRUE, 
+      searchable = TRUE, 
+      defaultColDef = reactable::colDef(html = TRUE))
+```
+
+## Example data
+The packaged example data is a subset from the package 
+[wastdr](https://dbca-wa.github.io/wastdr/),
+which itself is not included as a dependency to keep this package streamlined and small.
+
+As a caveat, the data should be considered as synthetic and no real analysis
+should be conducted on it.
+
+As marine turtle hatchlings emerge from a nest and scamper towards what they believe
+is the fastest way into the ocean, they form a fan of tracks in the sand.
+The fan can be approximated through a circle segment from the leftmost to the rightmost
+track's compass bearing. The number of tracks in a fan can sometimes be hard to precisely 
+count, but can be estimated with a lower and upper estimate (e.g. ca 50 tracks,
+min 30 max 70 tracks).
+
+The raw data is documented at `help(fans)`.
+
+Some hatchlings get the direction to water completely wrong and wander off on their
+own, forming an outlier track. See also `help(outliers)`.
+Some outliers are from nests not included in `fans`.
+
+The biggest orientation help for hatchlings is the dim starlight over the ocean,
+and the dark sand dune behind them. Since hatchlings wander towards the lightest
+horizon, their orientation is particularly vulnerable to artificial light sources.
+These are recorded, if known, as bearings from the nest location.
+See also `help(lights)`.
+Some light sources are from nests not included in `fans`.
+
+For simplicity, the data is transmuted to have only the required columns
+in the default naming scheme. This saves us from specifying the column names
+when calling `addCircleSectorMinMax` and `addCircleSectorMid`.
+
+The processing steps are kept in `inst/generate_data.R`.
+
+The data we show here are:
+
+* `fans_tracks`: Hatchling tracks form a main fan originating from the nest and spreading out.
+* `fans_mean`: The mean direction of the main fan. This is where most hatchlings went.
+* `fans_water`: The direction to water. This is where they are meant to go.
+* `outlier_segments`: Outlier tracks. These folks got it completely wrong.
+* `light_segments_natural`: Known natural light sources.
+* `light_segments_artificial`: Known artificial light sources. These tend to disorient hatchlings.
+
+Example data for `addCircleSectorMinMax`:
+
+```{r}
+fans_tracks %>% hr()
+```
+
+Example data for `addCircleSectorMid`:
+
+```{r}
+fans_mean %>% hr()
+```
+
+## Visualisation
+
+At the location of each nests, we show:
+
+* A white circle indicating the nest with radius 5m.
+* The main turtle hatchling tracks fan as a blue circle segment from 
+  `start_angle` to `end_angle` with radius 10m.
+* A thin black segment pointing towards the water.
+* A thin blue segment pointing towards the mean bearing.
+* A thin red segment for each outlier.
+* A thin yellow segment pointing towards each natural light source.
+* A thin orange segment pointing towards each artificial light source.
+
+```{r}
+leaflet_basemap(l_height = 500, l_width = 700) %>%
+  # clearBounds releases setView from leaflet_basemap
+  # so that addCircleSectorMid/MinMax can expandLimits
+  leaflet::clearBounds() %>%
+  leaflet::addCircles(
+    data = fans_tracks,
+    lat = ~lat,
+    lng = ~lon,
+    color = "white",
+    weight = 2,
+    radius = 5
+  ) %>%
+  addCircleSectorMid(data = light_segments_artificial) %>%
+  addCircleSectorMid(data = light_segments_natural) %>%
+  addCircleSectorMid(data = fans_mean) %>%
+  addCircleSectorMid(data = fans_water) %>%
+  addCircleSectorMid(data = outlier_segments) %>%
+  addCircleSectorMinMax(data = fans_tracks)
+```
